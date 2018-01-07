@@ -25,30 +25,29 @@ class MovieTab extends Component {
                     txt: "北美票房榜"
                 }
             ],
-            movieTabIndex: 1,
-            cacheMovieTabIndex: 1
+            movieTabIndex: 1
         };
         this.getIndex = this.getIndex.bind(this);
     }
 
     getIndex(index) {
-        if (this.state.movieTabIndex && this.state.movieTabIndex === index) {
+        if (this.state.movieTabIndex === index) {
             return true;
         }
         return false;
     }
 
-    switchMovieTab(index) {
-        if (!index) return;
-        if (this.state.movieTabIndex !== index) {
+    componentWillReceiveProps(nextProps) {
+        if (this.props !== nextProps) {
+            let index = nextProps.movieTab.movieTabIndex;
             this.setState({
-                movieTabIndex: index,
-                cacheMovieTabIndex: index
+                movieTabIndex: index
             });
         }
     }
 
     render() {
+        const { switchMovieTab } = this.props;
         const len = this.state.movieTabData.length;
         const w = 100 / len + "%";
         return (
@@ -63,7 +62,7 @@ class MovieTab extends Component {
                                 key={index}
                                 className={liClass}
                                 style={{ width: w }}
-                                onClick={e => this.switchMovieTab(index, e)}
+                                onClick={e => switchMovieTab(index, e)}
                             >
                                 {item.txt}
                             </li>
@@ -85,10 +84,17 @@ class MovieSearch extends Component {
 
     searchMovies(e) {
         const val = e.target.value;
-        this.setState({
-            movieSearchClear: val ? true : false
-        });
         if (val) {
+            this.setState({
+                movieSearchClear: true
+            });
+            this.props.cacheMovieTab();
+            this.props.switchMovieTab(0);
+        } else {
+            this.setState({
+                movieSearchClear: false
+            });
+            this.props.recoverMovieTab();
         }
     }
 
@@ -130,9 +136,9 @@ class Movie extends Component {
     render() {
         return (
             <div className="wrap">
-                <MovieSearch />
+                <MovieSearch {...this.props} />
                 <div className="y_section" style={{ marginTop: "46px" }}>
-                    <MovieTab />
+                    <MovieTab {...this.props} />
                     {this.state.movieListData.length ? (
                         <MovieList list={this.state.movieListData} />
                     ) : null}

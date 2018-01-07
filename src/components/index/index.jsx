@@ -13,7 +13,7 @@ class Index extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            let data = nextProps.state.data;
+            const data = nextProps.state.data;
             this.setState({
                 moviesData: data
             })

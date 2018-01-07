@@ -43,6 +43,7 @@ export default mySeting => {
                 <this.props.seting.component
                     {...this.props}
                     state={this.props.state.toJS()}
+                    movieTab={this.props.movieTab.toJS()}
                 />
             );
         }
@@ -52,6 +53,7 @@ export default mySeting => {
     return connect(state => {
         return {
             state: state.fetchData,
+            movieTab: state.movieTab
         };
     }, action)(Index); //连接redux
 };

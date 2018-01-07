@@ -4,7 +4,9 @@ import utils from '../../libs/utils'
 export const GET_MOVIES_REQUEST = 'GET_MOVIES_REQUEST'
 export const GET_MOVIES_SUCCESS = 'GET_MOVIES_SUCCESS'
 export const GET_MOVIES_FAILURE = 'GET_MOVIES_FAILURE'
-
+export const SWITCH_MOVIE_TAB = 'SWITCH_MOVIE_TAB'
+export const CACHE_MOVIE_TAB = 'CACHE_MOVIE_TAB'
+export const RECOVER_MOVIE_TAB = 'RECOVER_MOVIE_TAB'
 
 
 // 1.获取数据分为2个部分
@@ -60,5 +62,24 @@ export const fetchMovies = (path, params) => {
 				}
 			})
 			.catch(error => console.log(error))
+	}
+}
+
+export const switchMovieTab = (index)=> {
+	return {
+		type: SWITCH_MOVIE_TAB,
+		index
+	}
+}
+
+export const cacheMovieTab = ()=> {
+	return {
+		type: CACHE_MOVIE_TAB
+	}
+}
+
+export const recoverMovieTab = ()=> {
+	return {
+		type: RECOVER_MOVIE_TAB
 	}
 }

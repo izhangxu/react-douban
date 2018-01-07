@@ -1,7 +1,11 @@
 import Immutable from "immutable";
-import { GET_MOVIES_REQUEST, GET_MOVIES_SUCCESS } from "../action/index";
+import { GET_MOVIES_REQUEST, GET_MOVIES_SUCCESS,SWITCH_MOVIE_TAB, CACHE_MOVIE_TAB, RECOVER_MOVIE_TAB } from "../action/index";
 
 const defaultState = Immutable.fromJS({ data: {}, isFetching: false });
+const defaultMovieTab = Immutable.fromJS({
+	movieTabIndex: 1,
+	cacheMovieTabIndex: -1
+});
 
 export const fetchData = (state = defaultState, action = {}) => {
 	switch (action.type) {
@@ -11,7 +15,25 @@ export const fetchData = (state = defaultState, action = {}) => {
 			return Immutable.Map({
 				data: action.json,
 				isFetching: false
-			}); 
+			});
+		default:
+			return state;
+	}
+};
+
+export const movieTab = (state = defaultMovieTab, action = {}) => {
+	switch (action.type) {
+		case SWITCH_MOVIE_TAB:
+			return state.set('movieTabIndex', action.index);
+		case CACHE_MOVIE_TAB:
+			const movieIndex = state.get('movieTabIndex') || 1;
+			return state.set('cacheMovieTabIndex', movieIndex);
+		case RECOVER_MOVIE_TAB:
+			const cacheMovieIndex = state.get('cacheMovieTabIndex') || 1;
+			return Immutable.Map({
+				movieTabIndex: cacheMovieIndex,
+				cacheMovieTabIndex: -1
+			});
 		default:
 			return state;
 	}
