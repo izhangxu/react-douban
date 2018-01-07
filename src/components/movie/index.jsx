@@ -37,6 +37,12 @@ class MovieTab extends Component {
         return false;
     }
 
+    switchTab(index) {
+        if (index && this.state.movieTabIndex !== index) {
+            this.props.switchMovieTab(index);
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
             let index = nextProps.movieTab.movieTabIndex;
@@ -47,7 +53,6 @@ class MovieTab extends Component {
     }
 
     render() {
-        const { switchMovieTab } = this.props;
         const len = this.state.movieTabData.length;
         const w = 100 / len + "%";
         return (
@@ -62,7 +67,7 @@ class MovieTab extends Component {
                                 key={index}
                                 className={liClass}
                                 style={{ width: w }}
-                                onClick={e => switchMovieTab(index, e)}
+                                onClick={e => this.switchTab(index, e)}
                             >
                                 {item.txt}
                             </li>
