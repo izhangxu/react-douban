@@ -21,10 +21,10 @@ export default mySeting => {
         componentDidMount() {
             //获取数据
             if (this.props.seting.url) {
-                // this.props.fetchMovies(
-                //     this.props.seting.url,
-                //     this.props.seting.params
-                // );
+                this.props.fetchMovies(
+                    this.props.seting.url,
+                    this.props.seting.params
+                );
             }
         }
 
@@ -44,6 +44,7 @@ export default mySeting => {
                     {...this.props}
                     state={this.props.state.toJS()}
                     movieTab={this.props.movieTab.toJS()}
+                    scrollStatus={this.props.scrollStatus}
                 />
             );
         }
@@ -53,7 +54,8 @@ export default mySeting => {
     return connect(state => {
         return {
             state: state.fetchData,
-            movieTab: state.movieTab
+            movieTab: state.movieTab,
+            scrollStatus: state.scrollStatus
         };
     }, action)(Index); //连接redux
 };

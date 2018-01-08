@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { is, fromJS} from 'immutable';
-
+import utils from '../../libs/utils'
 
 class MovieItem extends Component {
 
@@ -8,12 +8,16 @@ class MovieItem extends Component {
         return !is(fromJS(this.props), fromJS(nextProps)) || !is(fromJS(this.state),fromJS(nextState))
     }
 
+    getImg(url) {
+    	return utils.handleImageUrl(url);
+    }
+
 	render() {
 		let {title, newDirectors, newCasts, genres, rating, images} = this.props;
 		return (
 	        <div className="row">
 	            <div className="y_img">
-	                <img src={images.small} alt="" />
+	                <img src={this.getImg(images.small)} alt="" />
 	            </div>
 	            <div className="y_txt">
 	                <div className="t1">{title}</div>

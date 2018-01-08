@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import template from "../common/template";
+import ScrollView from "../common/scrollView";
 import MovieList from "../movie/movieList";
 import Footer from "../footer";
 import classNames from "classnames";
 
+// 电影类目切换
 class MovieTab extends Component {
     constructor(props, context) {
         super(props, context);
@@ -41,6 +43,7 @@ class MovieTab extends Component {
         if (index && this.state.movieTabIndex !== index) {
             this.props.switchMovieTab(index);
         }
+        this.props.toggleScrollStatus(index === 4 ? true: false);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -78,7 +81,7 @@ class MovieTab extends Component {
         );
     }
 }
-
+// 电影搜索
 class MovieSearch extends Component {
     constructor(props, context) {
         super(props, context);
@@ -120,7 +123,7 @@ class MovieSearch extends Component {
         );
     }
 }
-
+// 电影
 class Movie extends Component {
     constructor(props, context) {
         super(props, context);
@@ -138,6 +141,13 @@ class Movie extends Component {
         }
     }
 
+    pullupCallback() {
+        this.props.fetchMovies("/v2/movie/in_theaters", {
+            count: 10,
+            start: 10
+        });
+    }
+
     render() {
         return (
             <div className="wrap">
@@ -145,7 +155,12 @@ class Movie extends Component {
                 <div className="y_section" style={{ marginTop: "46px" }}>
                     <MovieTab {...this.props} />
                     {this.state.movieListData.length ? (
-                        <MovieList list={this.state.movieListData} />
+                        <ScrollView
+                            data="this.state.movieListData"
+                            pullup={this.pullupCallback.bind(this)}
+                        >
+                            <MovieList list={this.state.movieListData} />
+                        </ScrollView>
                     ) : null}
                 </div>
                 <Footer />

@@ -7,6 +7,7 @@ export const GET_MOVIES_FAILURE = 'GET_MOVIES_FAILURE'
 export const SWITCH_MOVIE_TAB = 'SWITCH_MOVIE_TAB'
 export const CACHE_MOVIE_TAB = 'CACHE_MOVIE_TAB'
 export const RECOVER_MOVIE_TAB = 'RECOVER_MOVIE_TAB'
+export const TOGGLE_SCROLL_STATUS = 'TOGGLE_SCROLL_STATUS'
 
 
 // 1.获取数据分为2个部分
@@ -24,16 +25,18 @@ const getMoviesRequest = path => {
 	}
 };
 
-const getMoviesSuccess = (path, json) => {
+const getMoviesSuccess = (path, json, start) => {
 	return {
 		type: GET_MOVIES_SUCCESS,
 		path,
-		json
+		json,
+		start
 	}
 };
 
 export const fetchMovies = (path, params) => {
-	let url = 'http://api.douban.com' + path + utils.paramType(params);
+	const url = 'http://api.douban.com' + path + utils.paramType(params);
+	const start = params.start;
 	return dispatch => {
 		dispatch(getMoviesRequest(path));
 		return fetch(url, {
@@ -56,7 +59,7 @@ export const fetchMovies = (path, params) => {
 									item.newDirectors = item.newDirectors.join('、');
 								}
 							});
-							return dispatch(getMoviesSuccess(path, data))
+							return dispatch(getMoviesSuccess(path, data, start))
 						}
 					});
 				}
@@ -83,3 +86,10 @@ export const recoverMovieTab = ()=> {
 		type: RECOVER_MOVIE_TAB
 	}
 }
+
+export const toggleScrollStatus = (status)=> {
+	return {
+		type: TOGGLE_SCROLL_STATUS,
+		status
+	}
+};

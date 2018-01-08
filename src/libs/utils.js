@@ -62,5 +62,9 @@ export default {
 		paramStr = paramArr.join('&');
 		paramStr = '?' + paramStr;
 		return paramStr;
+	},
+	handleImageUrl(value) {
+		if (!value) return '';
+		return value.replace(/http\w{0,1}:\/\/(.)/g, 'https://images.weserv.nl/?url=$1');
 	}
 }
