@@ -43,7 +43,7 @@ class MovieTab extends Component {
         if (index && this.state.movieTabIndex !== index) {
             this.props.switchMovieTab(index);
         }
-        this.props.toggleScrollStatus(index === 4 ? true: false);
+        this.props.toggleScrollStatus(index === 4 ? true : false);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -128,6 +128,7 @@ class Movie extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
+            page: 0,
             movieListData: []
         };
     }
@@ -142,10 +143,15 @@ class Movie extends Component {
     }
 
     pullupCallback() {
-        this.props.fetchMovies("/v2/movie/in_theaters", {
-            count: 10,
-            start: 10
-        });
+        if (!this.props.scrollStatus.disabled) {
+            this.setState({
+                page: this.state.page + 1
+            });
+            this.props.fetchMovies("/v2/movie/in_theaters", {
+                count: 10,
+                start: this.state.page * 10
+            });
+        }
     }
 
     render() {

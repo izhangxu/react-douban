@@ -3,7 +3,7 @@ import { GET_MOVIES_REQUEST, GET_MOVIES_SUCCESS,SWITCH_MOVIE_TAB, CACHE_MOVIE_TA
 
 const defaultState = Immutable.fromJS({ data: {}, isFetching: false });
 const defaultMovieTab = Immutable.fromJS({movieTabIndex: 1, cacheMovieTabIndex: -1});
-
+// 获取电影数据
 export const fetchData = (state = defaultState, action = {}) => {
 	switch (action.type) {
 		case GET_MOVIES_REQUEST:
@@ -23,7 +23,7 @@ export const fetchData = (state = defaultState, action = {}) => {
 			return state;
 	}
 };
-
+// 电影类目切换
 export const movieTab = (state = defaultMovieTab, action = {}) => {
 	switch (action.type) {
 		case SWITCH_MOVIE_TAB:
@@ -41,8 +41,8 @@ export const movieTab = (state = defaultMovieTab, action = {}) => {
 			return state;
 	}
 };
-
-export const scrollStatus = (state = {}, action = {})=> {
+// 允许滚动
+export const scrollStatus = (state = {disabled: false}, action = {})=> {
 	switch(action.type) {
 		case TOGGLE_SCROLL_STATUS:
 			state.disabled = action.status;
