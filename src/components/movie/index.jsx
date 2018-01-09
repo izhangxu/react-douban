@@ -44,7 +44,8 @@ class MovieTab extends Component {
             this.props.switchMovieTab(index);
             this.props.scrollTo(0, 0);
             this.props.fetchMovies("/v2/movie/in_theaters", {
-                count: 10})
+                count: 10
+            });
         }
         this.props.toggleScrollStatus(index === 4 ? true : false);
     }
@@ -89,7 +90,8 @@ class MovieSearch extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            movieSearchClear: false
+            movieSearchClear: false,
+            movieSearchValue: ''
         };
     }
 
@@ -97,16 +99,33 @@ class MovieSearch extends Component {
         const val = e.target.value;
         if (val) {
             this.setState({
-                movieSearchClear: true
+                movieSearchClear: true,
+                movieSearchValue: val
+            });
+            this.props.fetchMovies("/v2/movie/search", {
+                count: 10,
+                q: val
             });
             this.props.cacheMovieTab();
             this.props.switchMovieTab(0);
         } else {
             this.setState({
-                movieSearchClear: false
+                movieSearchClear: false,
+                movieSearchValue: ''
             });
             this.props.recoverMovieTab();
         }
+    }
+
+    clearMovies(e) {
+        this.props.fetchMovies("/v2/movie/in_theaters", {
+            count: 10
+        });
+        this.setState({
+            movieSearchClear: false,
+            movieSearchValue: ''
+        });
+        this.props.recoverMovieTab();
     }
 
     render() {
@@ -119,8 +138,14 @@ class MovieSearch extends Component {
                     <input
                         className={inputClass}
                         onChange={e => this.searchMovies(e)}
+                        value={this.state.movieSearchValue}
                     />
-                    <button className="y_subtn">清 空</button>
+                    <button
+                        className="y_subtn"
+                        onClick={e => this.clearMovies(e)}
+                    >
+                        清 空
+                    </button>
                 </div>
             </div>
         );
@@ -132,15 +157,18 @@ class Movie extends Component {
         super(props, context);
         this.state = {
             page: 0,
-            movieListData: []
+            movieListData: [],
+            movieListDataLoading: false,
+            movieTabLoading: false
         };
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
-            let data = nextProps.state.data;
+            let { data, isFetching } = nextProps.state;
             this.setState({
-                movieListData: data
+                movieListData: data,
+                movieListDataLoading: isFetching
             });
         }
     }
@@ -162,18 +190,28 @@ class Movie extends Component {
     }
 
     render() {
+        const { disabled } = this.props.scrollStatus;
+
         return (
             <div className="wrap">
                 <MovieSearch {...this.props} />
                 <div className="y_section" style={{ marginTop: "46px" }}>
-                    <MovieTab {...this.props} scrollTo={this.scrollTo.bind(this)}/>
+                    <MovieTab
+                        {...this.props}
+                        scrollTo={this.scrollTo.bind(this)}
+                    />
                     {this.state.movieListData.length ? (
                         <ScrollView
                             data="this.state.movieListData"
                             pullup={this.pullupCallback.bind(this)}
-                            ref={ele => this.scrollViewEle = ele}
+                            ref={ele => (this.scrollViewEle = ele)}
                         >
-                            <MovieList list={this.state.movieListData} />
+                            <MovieList list={this.state.movieListData}>
+                                {this.state.movieListDataLoading &&
+                                !disabled ? (
+                                    <div className="load">加载中...</div>
+                                ) : null}
+                            </MovieList>
                         </ScrollView>
                     ) : null}
                 </div>

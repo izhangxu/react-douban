@@ -18,10 +18,11 @@ export const TOGGLE_SCROLL_STATUS = 'TOGGLE_SCROLL_STATUS'
 // 3.先完成首页及列表页渲染
 // 再完成路由渲染
 
-const getMoviesRequest = path => {
+const getMoviesRequest = (path, start) => {
 	return {
 		type: GET_MOVIES_REQUEST,
-		path
+		path,
+		start
 	}
 };
 
@@ -38,7 +39,7 @@ export const fetchMovies = (path, params) => {
 	const url = 'http://api.douban.com' + path + utils.paramType(params);
 	const start = params.start;
 	return dispatch => {
-		dispatch(getMoviesRequest(path));
+		dispatch(getMoviesRequest(path, start));
 		return fetch(url, {
 				'mode': 'cors',
 				'Content-Type': 'application/json'

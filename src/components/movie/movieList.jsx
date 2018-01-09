@@ -45,6 +45,7 @@ export default class MovieList extends Component{
     				return <MovieItem key={index} {...item} index={index}/>
     			})
     		}
+    		{this.props.children}
 		    </div>
     	)
     }
