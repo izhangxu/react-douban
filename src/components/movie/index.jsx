@@ -42,6 +42,9 @@ class MovieTab extends Component {
     switchTab(index) {
         if (index && this.state.movieTabIndex !== index) {
             this.props.switchMovieTab(index);
+            this.props.scrollTo(0, 0);
+            this.props.fetchMovies("/v2/movie/in_theaters", {
+                count: 10})
         }
         this.props.toggleScrollStatus(index === 4 ? true : false);
     }
@@ -154,16 +157,21 @@ class Movie extends Component {
         }
     }
 
+    scrollTo(x, y) {
+        this.scrollViewEle.scrollTo(x, y);
+    }
+
     render() {
         return (
             <div className="wrap">
                 <MovieSearch {...this.props} />
                 <div className="y_section" style={{ marginTop: "46px" }}>
-                    <MovieTab {...this.props} />
+                    <MovieTab {...this.props} scrollTo={this.scrollTo.bind(this)}/>
                     {this.state.movieListData.length ? (
                         <ScrollView
                             data="this.state.movieListData"
                             pullup={this.pullupCallback.bind(this)}
+                            ref={ele => this.scrollViewEle = ele}
                         >
                             <MovieList list={this.state.movieListData} />
                         </ScrollView>
