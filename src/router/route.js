@@ -4,8 +4,7 @@ import {
 	Route,
 	Redirect,
 	IndexRoute,
-	browserHistory,
-	hashHistory
+	browserHistory
 } from "react-router";
 import index from "../components/index";
 
@@ -35,15 +34,23 @@ const admin = (location, cb) => {
 	);
 };
 
-const history =
-	process.env.NODE_ENV !== "production" ? browserHistory : hashHistory;
+const detail = (location, cb) => {
+	require.ensure(
+		[],
+		require => {
+			cb(null, require("../components/detail").default);
+		},
+		"detail"
+	);
+};
 
 const RouteConfig = (
-	<Router history={history}>
+	<Router history={browserHistory}>
 		<Route path="/" component={Roots}>
 			<IndexRoute component={index} />
 			<Route path="movie" getComponent={movie} />
 			<Route path="admin" getComponent={admin} />
+			<Route path="detail/:id" getComponent={detail} />
 			<Redirect from="*" to="/" />
 		</Route>
 	</Router>

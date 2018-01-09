@@ -18,7 +18,7 @@ export default mySeting => {
     class Index extends Component {
         static defaultProps = { seting };
 
-        componentDidMount() {
+        componentWillMount() {
             //获取数据
             if (this.props.seting.url) {
                 this.props.fetchMovies(

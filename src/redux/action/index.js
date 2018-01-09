@@ -37,7 +37,7 @@ const getMoviesSuccess = (path, json, start) => {
 
 export const fetchMovies = (path, params) => {
 	const url = 'http://api.douban.com' + path + utils.paramType(params);
-	const start = params.start;
+	const start = params ? params.start : 0;
 	return dispatch => {
 		dispatch(getMoviesRequest(path, start));
 		return fetch(url, {
@@ -49,18 +49,20 @@ export const fetchMovies = (path, params) => {
 					response.json().then(data => {
 						if (data.total > 0 || data.date) {
 							data = data.subjects;
-							data = data.map(item => item.subject ? item.subject : item);
-							data.forEach(item => {
-								if (item.casts.length) {
-									item.newCasts = item.casts.map(ele => ele.name);
-									item.newCasts = item.newCasts.join('、');
-								}
-								if (item.directors.length) {
-									item.newDirectors = item.directors.map(ele => ele.name);
-									item.newDirectors = item.newDirectors.join('、');
-								}
-							});
+							// data = data.map(item => item.subject ? item.subject : item);
+							// data.forEach(item => {
+							// 	if (item.casts.length) {
+							// 		item.newCasts = item.casts.map(ele => ele.name);
+							// 		item.newCasts = item.newCasts.join('、');
+							// 	}
+							// 	if (item.directors.length) {
+							// 		item.newDirectors = item.directors.map(ele => ele.name);
+							// 		item.newDirectors = item.newDirectors.join('、');
+							// 	}
+							// });
 							return dispatch(getMoviesSuccess(path, data, start))
+						} else {
+							return dispatch(getMoviesSuccess(path, [data]))
 						}
 					});
 				}
